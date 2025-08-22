@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Multi-Size Promo Units (No-Overlap)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<style>
+  /* Page */
+  html,body{margin:0;padding:0;background:#f8fafc}
+  *{box-sizing:border-box}
+  body{font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial}
+  .page{max-width:1200px;margin:40px auto;padding:0 16px}
+  .frame{margin:24px auto}
+
+  /* Base unit */
+  .unit{position:relative; overflow:hidden; border:1px solid #e2e8f0; border-radius:12px;
+        background:linear-gradient(135deg,#dbeafe,#bae6fd)}
+  .shine{position:absolute; inset:-40% -40% auto auto; width:140%; height:140%;
+         background:radial-gradient(420px 220px at 20% 10%, rgba(41,78,155,.18), transparent); pointer-events:none}
+  .label{position:absolute; top:8px; left:8px; background:#fff; color:#0f172a;
+         padding:6px 10px; border-radius:999px; font-size:12px; box-shadow:0 6px 16px rgba(15,23,42,.08); pointer-events:none; z-index:2}
+  .mark{position:absolute; top:8px; right:8px; width:26px; height:26px; border-radius:999px;
+        background:#294e9b; color:#fff; display:grid; place-items:center; font-weight:700; pointer-events:none; z-index:2}
+  .link-full{position:absolute; inset:0; z-index:10; display:block; cursor:pointer}
+  .cta{background:#294e9b;color:#fff;border-radius:10px;padding:10px 14px;font-weight:800;font-size:13px;letter-spacing:.2px;
+       display:inline-flex;align-items:center;gap:8px;box-shadow:0 10px 24px rgba(41,78,155,.25);pointer-events:none;flex:0 0 auto}
+  .cta::after{content:"→";transition:transform .25s ease}
+  .unit:hover .cta::after{transform:translateX(3px)}
+  @keyframes up{0%{opacity:0;transform:translateY(8px)}20%{opacity:1;transform:translateY(0)}70%{opacity:1}85%{opacity:0}100%{opacity:0}}
+  @media (prefers-reduced-motion:reduce){ .anim{animation:none!important; opacity:1!important; transform:none!important} }
+
+  /* ===== 1) 300 x 250 ===== */
+  .unit300{width:300px;height:250px}
+  /* FIX: chips için üstten alan ayırdık */
+  .unit300 .stack{position:absolute; inset:0; padding:52px 16px 16px;  /* <- üst 52px */
+                  display:grid; place-content:center; justify-items:center; gap:10px; text-align:center}
+  .unit300 .title{font-size:20px;line-height:1.15;font-weight:800;color:#0f172a;max-width:240px;opacity:0;animation:up 7.5s ease-in-out both}
+  .unit300 .sub{font-size:13px;color:#475569;max-width:240px;opacity:0;animation:up 7.5s ease-in-out .08s both}
+
+  /* ===== 2) 728 x 90 ===== */
+  .unit728{width:728px;height:90px}
+  .unit728 .row{position:absolute; inset:0; padding:28px 14px 10px; /* <- üst 28px chips alanı */
+                display:flex; align-items:center; gap:14px}
+  /* FIX: CTA ile çakışmayı engellemek için başlık genişliği kısıtlandı */
+  .unit728 .title{font-size:18px;font-weight:800;color:#0f172a;min-width:0;max-width:calc(100% - 200px); /* ~CTA+gap */ 
+                  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;animation:up 7.5s ease-in-out both}
+  .unit728 .sub{display:none} /* 90px yükseklikte ikinci satırı kaldırdık */
+  .unit728 .grow{flex:1;min-width:0}
+  .unit728 .cta{margin-left:auto}
+
+  /* ===== 3) 160 x 600 ===== */
+  .unit160{width:160px;height:600px}
+  .unit160 .col{position:absolute; inset:0; padding:60px 12px 12px; /* <- üst 60px chips alanı */
+                display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center}
+  .unit160 .title{margin-top:6px;font-size:18px;line-height:1.15;font-weight:800;color:#0f172a;opacity:0;animation:up 7.5s ease-in-out both}
+  .unit160 .sub{font-size:12px;color:#475569;opacity:0;animation:up 7.5s ease-in-out .08s both}
+  .unit160 .cta{margin-top:auto;margin-bottom:10px}
+
+  /* ===== 4) 320 x 100 ===== */
+  .unit320{width:320px;height:100px}
+  .unit320 .row{position:absolute; inset:0; padding:30px 12px 10px; /* <- üst 30px chips alanı */
+                display:flex; align-items:center; gap:10px}
+  /* FIX: CTA ile üst üste binmemesi için max-width */
+  .unit320 .title{font-size:15px;font-weight:800;color:#0f172a;min-width:0;max-width:calc(100% - 130px);
+                  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;animation:up 7.5s ease-in-out both}
+  .unit320 .cta{margin-left:auto}
+
+  /* Demo headings */
+  h2{margin:0 0 6px 0; font:600 14px/1.4 ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto}
+  .cap{color:#64748b; font-size:12px; margin-bottom:10px}
+</style>
+</head>
+<body>
+  <main class="page">
+    <!-- 1) 300x250 -->
+    <div class="frame" style="width:300px">
+      <h2>300×250</h2><div class="cap">Centered stack</div>
+      <div class="unit unit300" role="img" aria-label="Looks exactly like your Figma. React + Tailwind • QA before ship.">
+        <div class="shine" aria-hidden="true"></div>
+        <div class="label">Pixel-perfect</div><div class="mark">A</div>
+        <div class="stack">
+          <div class="title anim">Looks exactly like your Figma.</div>
+          <div class="sub anim">React + Tailwind • QA before ship</div>
+          <div class="cta">Get a Quote</div>
+        </div>
+        <a class="link-full" href="https://example.com?u=300x250" target="_blank" rel="noopener" aria-label="Open link"></a>
+      </div>
+    </div>
+
+    <!-- 2) 728x90 -->
+    <div class="frame" style="width:728px">
+      <h2>728×90</h2><div class="cap">Horizontal headline + CTA</div>
+      <div class="unit unit728" role="img" aria-label="Pixel-perfect React + Tailwind. QA before ship.">
+        <div class="shine" aria-hidden="true"></div>
+        <div class="label">Fast builds</div><div class="mark">A</div>
+        <div class="row">
+          <div class="grow">
+            <div class="title anim">Match Figma exactly — ship fast.</div>
+          </div>
+          <div class="cta">Hire Now</div>
+        </div>
+        <a class="link-full" href="https://example.com?u=728x90" target="_blank" rel="noopener" aria-label="Open link"></a>
+      </div>
+    </div>
+
+    <!-- 3) 160x600 -->
+    <div class="frame" style="width:160px">
+      <h2>160×600</h2><div class="cap">Tall, centered column</div>
+      <div class="unit unit160" role="img" aria-label="Clean, responsive UI.">
+        <div class="shine" aria-hidden="true"></div>
+        <div class="label">Detail-focused</div><div class="mark">A</div>
+        <div class="col">
+          <div class="title anim">Clean frontends</div>
+          <div class="sub anim">React + Tailwind • QA</div>
+          <div class="cta">Let’s Talk</div>
+        </div>
+        <a class="link-full" href="https://example.com?u=160x600" target="_blank" rel="noopener" aria-label="Open link"></a>
+      </div>
+    </div>
+
+    <!-- 4) 320x100 -->
+    <div class="frame" style="width:320px">
+      <h2>320×100</h2><div class="cap">Compact mobile banner</div>
+      <div class="unit unit320" role="img" aria-label="Pixel-perfect frontends, shipped fast.">
+        <div class="shine" aria-hidden="true"></div>
+        <div class="label">Pixel-perfect</div><div class="mark">A</div>
+        <div class="row">
+          <div class="title anim">Looks like your design.</div>
+          <div class="cta">Get Quote</div>
+        </div>
+        <a class="link-full" href="https://example.com?u=320x100" target="_blank" rel="noopener" aria-label="Open link"></a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
